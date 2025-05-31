@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import MoviePlayer from "../components/MoviePlayer";
+import MoviePlayer from "../components/movieplayer.jsx";
 
 const API_KEY = "c4370729220155d050944d6b19d83659";
 
