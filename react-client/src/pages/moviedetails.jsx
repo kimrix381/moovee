@@ -78,8 +78,8 @@ const MovieDetails = ({ type }) => {
         if (imdbId) {
           const url =
             type === "movie"
-              ? `https://vidfast.pro/movie/${imdbId}?autoPlay=true`
-              : `https://vidfast.pro/tv/${imdbId}/${season}/${episode}?autoPlay=true`;
+              ? `https://vidlink.pro/movie/${imdbId}?autoPlay=true`
+              : `https://vidlink.pro/tv/${imdbId}/${season}/${episode}?autoPlay=true`;
           setEmbedUrl(url);
         }
 

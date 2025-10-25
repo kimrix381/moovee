@@ -123,26 +123,30 @@ const Home = () => {
         />
 
         <div className="relative z-10 flex items-center justify-center h-full text-black">
-          <div className="text-center justify-center">
-            <h1 className="text-4xl font-bold mb-30 md:mb-50 text-white">
+          <div className="text-center justify-center w-full p-90 md:p-40 sm:p-20 ">
+            {/* <h1 className="text-4xl font-bold mb-30 md:mb-50 text-white">
               Welcome to Kimani Movies
-            </h1>
+            </h1> */}
             <h1 className="text-xl mb-10 text-amber-50">
               Choose between the two below
             </h1>
-            <div className="mb-4 flex gap-4">
+            <div className="mb-4 flex gap-4 text-center justify-center ">
               <button
                 onClick={() => handleTypeChange("movie")}
                 className={` px-4 py-2 rounded ${
-                  type === "movie" ? "bg-blue-600 text-white" : "bg-gray-200"
+                  type === "movie"
+                    ? "btn-grad text-white"
+                    : "bg-gray-200  px-[45px] py-[0px] h-10 mt-4"
                 }`}
               >
                 Movies
               </button>
               <button
                 onClick={() => handleTypeChange("tv")}
-                className={`px-4 py-2 rounded ${
-                  type === "tv" ? "bg-blue-600 text-white" : "bg-gray-200"
+                className={`px-4 py-2 rounded  ${
+                  type === "tv"
+                    ? "btn-grad text-white"
+                    : "bg-gray-200 px-[45px] py-[0px] h-10 mt-4"
                 }`}
               >
                 Series
@@ -161,12 +165,12 @@ const Home = () => {
                 }...`}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="p-2 border rounded w-full text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 border border-red-600 rounded-4xl w-full text-white bg-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
                 onClick={showComponent}
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-linear-to-t from-red-950 to-red-500 text-white px-4 py-2 rounded "
               >
                 Search
               </button>
