@@ -72,6 +72,7 @@ const Home = () => {
 
   return (
     <div className="p-4 text-amber-50 bg-black ">
+      <div className="top" id="top1"></div>
       <nav className="flex-col md:flex-row md:flex gap-9 md:justify-between mb-6 text-center md:mb-0">
         <div
           id="top"
@@ -91,19 +92,19 @@ const Home = () => {
         <div className=" ">
           <a
             href="#trending"
-            className="underline decoration-white   rounded-2xl bg-white text-black text-sm p-2 mr-2 md:text-xl md:mr-6 md:px-3 md:py-0.5"
+            className="rounded-2xl bg-linear-to-t from-red-950 to-red-500 text-white text-sm p-2 h-8 mr-2 md:text-xl md:mr-6 md:px-3 md:py-0.5 bx-shdw font-bold"
           >
             Trending
           </a>
           <a
             href="#latest"
-            className="underline decoration-red-500  rounded-2xl bg-red-500 text-black text-sm p-2 mr-2 md:text-xl md:mr-6 md:px-3 md:py-0.5"
+            className="rounded-2xl bg-linear-to-t from-red-950 to-red-500 text-white text-sm p-2 h-8 mr-2 md:text-xl md:mr-6 md:px-3 md:py-0.5 bx-shdw "
           >
             Latest
           </a>
           <a
             href="#toprated"
-            className="underline decoration-green-700  rounded-2xl bg-green-700 text-sm p-2 mr-2 md:text-xl md:mr-6 md:px-3 md:py-0.5"
+            className="rounded-2xl bg-linear-to-t from-red-950 to-red-500 text-white text-sm p-2 h-8 mr-2 md:text-xl md:mr-6 md:px-3 md:py-0.5 bx-shdw"
           >
             Top Rated
           </a>
@@ -123,11 +124,11 @@ const Home = () => {
         />
 
         <div className="relative z-10 flex items-center justify-center h-full text-black">
-          <div className="text-center justify-center w-full p-90 md:p-40 sm:p-20 ">
+          <div className="text-center justify-center w-full md:p-40 sm:p-20 ">
             {/* <h1 className="text-4xl font-bold mb-30 md:mb-50 text-white">
               Welcome to Kimani Movies
             </h1> */}
-            <h1 className="text-xl mb-10 text-amber-50">
+            <h1 className=" text-2xl mb-10 text-amber-50">
               Choose between the two below
             </h1>
             <div className="mb-4 flex gap-4 text-center justify-center ">
@@ -237,10 +238,10 @@ const Home = () => {
         </div>
 
         <a
-          href="#top"
+          href="#top1"
           className="text-2xl shake-button fixed bottom-9 right-6 bg-blue-500 text-white px-4 py-2 rounded shadow-lg hover:bg-blue-600 z-50"
         >
-          <i href="#top" class="bx  bx-chevrons-up"></i>
+          <i href="#top1" class="bx  bx-chevrons-up"></i>
         </a>
       </div>
 

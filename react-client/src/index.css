@@ -465,3 +465,7 @@
 /* h1 {
   position:  ;
 } */
+
+.bx-shdw {
+  box-shadow: 0 0 20px #eee;
+}
