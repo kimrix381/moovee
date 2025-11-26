@@ -74,12 +74,22 @@ const MovieDetails = ({ type }) => {
           await fetchEpisodes(season);
         }
 
-        const imdbId = data.external_ids?.imdb_id;
-        if (imdbId) {
-          const url =
-            type === "movie"
-              ? `https://vidlink.pro/movie/${imdbId}?autoPlay=true`
-              : `https://vidlink.pro/tv/${imdbId}/${season}/${episode}?autoPlay=true`;
+        // const imdbId = data.external_ids?.imdb_id;
+        // if (imdbId) {
+        //   const url =
+        //     type === "movie"
+        //       ? `https://www.vidking.net/embed/movie/${imdbId}?autoPlay=true`
+        //       : `https://www.vidking.net/embed/tv/${imdbId}/${season}/${episode}?autoPlay=true`;
+        //   setEmbedUrl(url);
+        // }
+
+        if (type === "tv") {
+          const tmdbId = data.id; // TMDB TV ID
+          const url = `https://www.vidking.net/embed/tv/${tmdbId}/${season}/${episode}?autoPlay=true`;
+          setEmbedUrl(url);
+        } else if (type === "movie") {
+          const tmdbId = data.id; // TMDB movie ID
+          const url = `https://www.vidking.net/embed/movie/${tmdbId}?autoPlay=true`;
           setEmbedUrl(url);
         }
 
