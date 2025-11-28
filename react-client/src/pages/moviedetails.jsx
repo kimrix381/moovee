@@ -1,24 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Futuristic from "../assets/Futuristic.mp4";
-import { Link } from "react-router-dom";
 
 const API_KEY = "c4370729220155d050944d6b19d83659";
 
 const MovieDetails = ({ type }) => {
-  const { id } = useParams();
+  const { id, season: urlSeason, episode: urlEpisode } = useParams();
+  const navigate = useNavigate();
+
   const [details, setDetails] = useState(null);
   const [embedUrl, setEmbedUrl] = useState("");
-  const [season, setSeason] = useState(1);
-  const [episode, setEpisode] = useState(1);
+  const [season, setSeason] = useState(urlSeason ? Number(urlSeason) : 1);
+  const [episode, setEpisode] = useState(urlEpisode ? Number(urlEpisode) : 1);
   const [episodes, setEpisodes] = useState([]);
   const [seasonsCount, setSeasonsCount] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [showSearch, setShowSearch] = useState(false); // toggle visibility
+
+  const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState("popular");
 
+  // Sync URL → state
+  useEffect(() => {
+    if (urlSeason) setSeason(Number(urlSeason));
+    if (urlEpisode) setEpisode(Number(urlEpisode));
+  }, [urlSeason, urlEpisode]);
+
+  // Fetch episodes for selected season
   const fetchEpisodes = async (seasonNumber) => {
     try {
       const res = await fetch(
@@ -26,12 +35,17 @@ const MovieDetails = ({ type }) => {
       );
       const data = await res.json();
       setEpisodes(data.episodes || []);
-      if (episode > (data.episodes?.length || 1)) setEpisode(1);
+
+      if (episode > (data.episodes?.length || 1)) {
+        setEpisode(1);
+        navigate(`/tv/${id}/season/${seasonNumber}/episode/1`);
+      }
     } catch (err) {
       console.error("Failed to fetch episodes", err);
     }
   };
 
+  // Search logic
   const fetchItems = async () => {
     const url =
       searchTerm === "popular"
@@ -49,16 +63,10 @@ const MovieDetails = ({ type }) => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (query.trim()) {
-      setSearchTerm(query.trim());
-    }
-  };
-  const handleTypeChange = (newType) => {
-    setType(newType);
-    setSearchTerm("popular");
-    setQuery("");
+    if (query.trim()) setSearchTerm(query.trim());
   };
 
+  // MAIN DATA FETCH
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -69,27 +77,20 @@ const MovieDetails = ({ type }) => {
         setDetails(data);
 
         if (type === "tv") {
-          setSeasonsCount(data.seasons?.length || 1);
-          if (season > data.seasons?.length) setSeason(1);
+          const seasons = data.seasons?.length || 1;
+          setSeasonsCount(seasons);
+
+          if (season > seasons) {
+            setSeason(1);
+            navigate(`/tv/${id}/season/1/episode/1`);
+          }
+
           await fetchEpisodes(season);
-        }
 
-        // const imdbId = data.external_ids?.imdb_id;
-        // if (imdbId) {
-        //   const url =
-        //     type === "movie"
-        //       ? `https://www.vidking.net/embed/movie/${imdbId}?autoPlay=true`
-        //       : `https://www.vidking.net/embed/tv/${imdbId}/${season}/${episode}?autoPlay=true`;
-        //   setEmbedUrl(url);
-        // }
-
-        if (type === "tv") {
-          const tmdbId = data.id; // TMDB TV ID
-          const url = `https://www.vidking.net/embed/tv/${tmdbId}/${season}/${episode}?autoPlay=true`;
+          const url = `https://www.vidking.net/embed/tv/${data.id}/${season}/${episode}?autoPlay=true`;
           setEmbedUrl(url);
-        } else if (type === "movie") {
-          const tmdbId = data.id; // TMDB movie ID
-          const url = `https://www.vidking.net/embed/movie/${tmdbId}?autoPlay=true`;
+        } else {
+          const url = `https://www.vidking.net/embed/movie/${data.id}?autoPlay=true`;
           setEmbedUrl(url);
         }
 
@@ -100,14 +101,13 @@ const MovieDetails = ({ type }) => {
       }
     };
 
-    const timer = setTimeout(fetchDetails, 6000); // Optional delay
+    const timer = setTimeout(fetchDetails, 6000);
     return () => clearTimeout(timer);
   }, [id, type, season, episode]);
 
+  // When season changes → fetch episodes
   useEffect(() => {
-    if (type === "tv") {
-      fetchEpisodes(season);
-    }
+    if (type === "tv") fetchEpisodes(season);
   }, [season]);
 
   if (loading || !details) {
@@ -132,30 +132,29 @@ const MovieDetails = ({ type }) => {
         <h2 className="text-xs md:text-3xl font-bold mb-2">
           {details.title || details.name}
         </h2>
+
         <Link
           to={`/`}
           className="p-2 font-bold rounded-2xl md:px-6 animated-border text-center md:w-[164px] bg-white text-black"
         >
           Home
         </Link>
-        <div>
-          {" "}
-          <i
-            id="search"
-            className="bx bx-search-alt text-3xl cursor-pointer"
-            onClick={() => setShowSearch(!showSearch)}
-          ></i>
-        </div>
+
+        <i
+          id="search"
+          className="bx bx-search-alt text-3xl cursor-pointer"
+          onClick={() => setShowSearch(!showSearch)}
+        ></i>
       </div>
       <div className="flex flex-col items-center gap-4 w-full">
         {showSearch && (
-          <form onSubmit={handleSearch} className="mt-4 flex gap-2">
+          <form onSubmit={handleSearch} className="mt-4 flex gap-2 w-full">
             <input
               type="text"
               placeholder="Search..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="p-2 border rounded text-white border-white  w-full"
+              className="p-2 border rounded text-white border-white w-full bg-black"
             />
             <button
               type="submit"
@@ -165,7 +164,7 @@ const MovieDetails = ({ type }) => {
             </button>
           </form>
         )}
-        {/* Search Results */}
+
         {searchTerm !== "popular" && (
           <div className="mt-16">
             <h2 className="text-5xl font-bold mb-10">Search Results</h2>
@@ -207,17 +206,64 @@ const MovieDetails = ({ type }) => {
         ) : (
           <p className="text-red-600">No video available.</p>
         )}
-      </div>
-
+      </div>{" "}
       <p className="text-gray-400 italic mb-2">{details.tagline}</p>
+      {/* Next / Previous Buttons */}
+      <div className="flex justify-between mt-4 px-55">
+        <button
+          onClick={() => {
+            let newEpisode = episode - 1;
+            let newSeason = season;
 
+            if (newEpisode < 1) {
+              if (season > 1) {
+                newSeason = season - 1;
+                newEpisode = episodes.length || 1;
+              } else return;
+            }
+
+            setSeason(newSeason);
+            setEpisode(newEpisode);
+            navigate(`/tv/${id}/season/${newSeason}/episode/${newEpisode}`);
+          }}
+          className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600"
+        >
+          Previous Episode
+        </button>
+
+        <button
+          onClick={() => {
+            let newEpisode = episode + 1;
+            let newSeason = season;
+
+            if (newEpisode > episodes.length) {
+              if (season < seasonsCount) {
+                newSeason = season + 1;
+                newEpisode = 1;
+              } else return;
+            }
+
+            setSeason(newSeason);
+            setEpisode(newEpisode);
+            navigate(`/tv/${id}/season/${newSeason}/episode/${newEpisode}`);
+          }}
+          className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600"
+        >
+          Next Episode
+        </button>
+      </div>
       {type === "tv" && (
         <div className="mb-4 flex-col md:flex items-center gap-6">
+          {/* Season Selector */}
           <label>
             Season:{" "}
             <select
               value={season}
-              onChange={(e) => setSeason(Number(e.target.value))}
+              onChange={(e) => {
+                const s = Number(e.target.value);
+                setSeason(s);
+                navigate(`/tv/${id}/season/${s}/episode/${episode}`);
+              }}
               className="border p-1 rounded border-white text-white bg-black"
             >
               {[...Array(seasonsCount).keys()].map((s) => (
@@ -228,11 +274,16 @@ const MovieDetails = ({ type }) => {
             </select>
           </label>
 
+          {/* Episode Selector */}
           <label>
             Episode:{" "}
             <select
               value={episode}
-              onChange={(e) => setEpisode(Number(e.target.value))}
+              onChange={(e) => {
+                const ep = Number(e.target.value);
+                setEpisode(ep);
+                navigate(`/tv/${id}/season/${season}/episode/${ep}`);
+              }}
               className="border p-1 rounded border-white text-white bg-black"
             >
               {episodes.map((ep) => (
@@ -242,15 +293,61 @@ const MovieDetails = ({ type }) => {
               ))}
             </select>
           </label>
+
+          {/* Next / Previous Buttons */}
+          {/* <div className="flex gap-4 mt-4">
+            <button
+              onClick={() => {
+                let newEpisode = episode - 1;
+                let newSeason = season;
+
+                if (newEpisode < 1) {
+                  if (season > 1) {
+                    newSeason = season - 1;
+                    newEpisode = episodes.length || 1;
+                  } else return;
+                }
+
+                setSeason(newSeason);
+                setEpisode(newEpisode);
+                navigate(`/tv/${id}/season/${newSeason}/episode/${newEpisode}`);
+              }}
+              className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600"
+            >
+              Previous Episode
+            </button>
+
+            <button
+              onClick={() => {
+                let newEpisode = episode + 1;
+                let newSeason = season;
+
+                if (newEpisode > episodes.length) {
+                  if (season < seasonsCount) {
+                    newSeason = season + 1;
+                    newEpisode = 1;
+                  } else return;
+                }
+
+                setSeason(newSeason);
+                setEpisode(newEpisode);
+                navigate(`/tv/${id}/season/${newSeason}/episode/${newEpisode}`);
+              }}
+              className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600"
+            >
+              Next Episode
+            </button>
+          </div> */}
         </div>
       )}
-      <div className="md:flex  items-start gap-6">
+      <div className="md:flex items-start gap-6">
         <img
           src={`https://image.tmdb.org/t/p/w500${details.poster_path}`}
           alt={details.title || details.name}
           className="w-[400px] rounded mb-4 h-[320px]"
         />
-        <div className="md:flex flex-col ">
+
+        <div className="md:flex flex-col">
           <p className="mb-2">
             <strong>Overview:</strong> {details.overview}
           </p>
