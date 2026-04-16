@@ -1,7 +1,7 @@
 import React from "react";
 import CyberGrid3D from "./cybergrid3d";
 import GalaxyRain from "./galaxyrain";
-import CyberOverlay from "./CyberOverlay";
+import CyberOverlay from "./cyberoverlay";
 import CyberCitySkyline from "./cybercityskyline";
 
 const CyberSystem = ({ children }) => {
