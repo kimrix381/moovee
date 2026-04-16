@@ -48,13 +48,16 @@ const Login = () => {
 
     typeText("AUTHENTICATING...", async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const res = await fetch(
+          "https://moovee-6zqk.onrender.com/api/auth/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(form),
           },
-          body: JSON.stringify(form),
-        });
+        );
 
         const data = await res.json();
 

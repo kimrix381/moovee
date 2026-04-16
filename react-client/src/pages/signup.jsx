@@ -21,13 +21,16 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const res = await fetch(
+      "https://moovee-6zqk.onrender.com/api/auth/signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
       },
-      body: JSON.stringify(form),
-    });
+    );
 
     const data = await res.json();
 

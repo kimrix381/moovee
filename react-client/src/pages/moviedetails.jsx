@@ -32,7 +32,7 @@ const MovieDetails = ({ type }) => {
 
       if (!token) return;
 
-      await fetch("http://localhost:5000/api/continue", {
+      await fetch("https://moovee-6zqk.onrender.com/api/continue", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

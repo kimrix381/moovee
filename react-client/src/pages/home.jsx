@@ -30,7 +30,7 @@ const Home = () => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:5000/api/profile", {
+      const res = await fetch("https://moovee-6zqk.onrender.com/api/profile", {
         headers: {
           Authorization: token,
         },
@@ -74,11 +74,14 @@ const Home = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await fetch("http://localhost:5000/api/continue", {
-          headers: {
-            Authorization: token,
+        const res = await fetch(
+          "https://moovee-6zqk.onrender.com/api/continue",
+          {
+            headers: {
+              Authorization: token,
+            },
           },
-        });
+        );
 
         const data = await res.json();
 

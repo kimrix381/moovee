@@ -16,7 +16,7 @@ const EditProfile = () => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:5000/api/profile", {
+      const res = await fetch("https://moovee-6zqk.onrender.com/api/profile", {
         headers: {
           Authorization: token,
         },
@@ -27,7 +27,7 @@ const EditProfile = () => {
       setUsername(data.username);
 
       if (data.avatar) {
-        setPreview(`http://localhost:5000/uploads/${data.avatar}`);
+        setPreview(`https://moovee-6zqk.onrender.com/uploads/${data.avatar}`);
       }
     };
 
@@ -59,13 +59,16 @@ const EditProfile = () => {
       formData.append("avatar", avatar);
     }
 
-    const res = await fetch("http://localhost:5000/api/profile/update", {
-      method: "PUT",
-      headers: {
-        Authorization: token,
+    const res = await fetch(
+      "https://moovee-6zqk.onrender.com/api/profile/update",
+      {
+        method: "PUT",
+        headers: {
+          Authorization: token,
+        },
+        body: formData,
       },
-      body: formData,
-    });
+    );
 
     if (res.ok) {
       alert("Profile updated");
