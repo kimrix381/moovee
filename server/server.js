@@ -38,7 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/continue", continueRoutes);
 app.use("/api/profile", profileRoutes);
 
-const PORT = "https://moovee-6zqk.onrender.com";
+const PORT = 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
